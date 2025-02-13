@@ -42,5 +42,7 @@
   "files": [
     "dist"
   ],
-  "dependencies": {}
+  "dependencies": {
+    "lodash-uuid": "^0.0.3"
+  }
 }

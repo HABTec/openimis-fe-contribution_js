@@ -8,6 +8,7 @@ import {
   formatGQLString,
 } from "@openimis/fe-core";
 import _ from "lodash";
+import lodashUuid from "lodash-uuid";
 
 const CONTRIBUTION_FULL_PROJECTION = (mm) => [
   "id",
@@ -151,11 +152,15 @@ export function newContribution() {
 }
 
 export function createContribution(mm, contribution, clientMutationLabel) {
-  let mutation = formatMutation(
+
+  let mutation = formatMutationCustom(
     "createPremium",
     formatContributionGQL(mm, contribution),
-    clientMutationLabel
+    clientMutationLabel,
+    undefined,
+    "paymentLink"
   );
+
   var requestedDateTime = new Date();
   return graphql(
     mutation.payload,
@@ -247,4 +252,36 @@ export function clearReceiptValidation(mm) {
   return (dispatch) => {
     dispatch({ type: `CONTRIBUTION_FIELDS_VALIDATION_CLEAR` });
   };
+}
+
+export function formatMutationCustom(
+  operationName,
+  input,
+  clientMutationLabel,
+  clientMutationDetails,
+  output = ""
+) {
+  const clientMutationId = lodashUuid.uuid();
+  const payload = `
+    mutation {
+      ${operationName}(
+        input: {
+          clientMutationId: "${clientMutationId}"
+          clientMutationLabel: "${clientMutationLabel}"
+          ${
+            !!clientMutationDetails
+              ? `clientMutationDetails: ${JSON.stringify(
+                  clientMutationDetails
+                )}`
+              : ""
+          }
+          ${input.trim()}
+        }
+      ) {
+        clientMutationId
+        internalId
+        ${output}
+      }
+    }`;
+  return { clientMutationId, payload };
 }

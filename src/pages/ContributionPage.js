@@ -17,9 +17,9 @@ const styles = theme => ({
 class ContributionPage extends Component {
 
 
-    save = (contribution) => {
+    save = async (contribution) => {
         if (!contribution.uuid) {
-            this.props.createContribution(
+            const response = await this.props.createContribution(
                 this.props.modulesManager,
                 contribution,
                 formatMessageWithValues(
@@ -28,6 +28,9 @@ class ContributionPage extends Component {
                     "CreateContribution.mutationLabel",
                 )
             );
+
+            const url = response.payload.data.createPremium.paymentLink
+            window.open(url, '_blank').focus();
         } else {
             this.props.updateContribution(
                 this.props.modulesManager,
