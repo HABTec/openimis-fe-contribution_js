@@ -202,8 +202,8 @@ class ContributionForm extends Component {
   };
 
   canSave = () => {
+
     const { contribution } = this.state;
-    const { isReceiptValid } = this.props;
     if (
       contribution?.policy?.product?.maxInstallments === 0 ||
       contribution.amount >
@@ -223,7 +223,7 @@ class ContributionForm extends Component {
         ))
     )
       return false;
-    if (contribution.payType == "F" && !contribution.payDate && contribution.receipt != "") {
+    if (contribution.payType === "F" && (!contribution.payDate || !contribution.receipt )) {
       return false;
     }
     return true;

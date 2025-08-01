@@ -198,7 +198,7 @@ class ContributionMasterPanel extends FormPanel {
               readOnly={readOnly}
               value={!edited ? '' : edited.payType}
               onChange={(c) => {
-                if (c == 'O') {
+                if (c === 'O') {
                   this.updateAttribute('payDate', new Date().toISOString().split('T')[0]);
                   this.updateAttribute('amount', edited?.policy?.value);
                 }
@@ -226,7 +226,7 @@ class ContributionMasterPanel extends FormPanel {
             />
           </Grid>
           {
-            edited.payType == "F" &&
+            edited.payType === "F" &&
             <Grid item xs={3} className={classes.item}>
               <PublishedComponent
                 pubRef='core.DatePicker'
@@ -239,7 +239,7 @@ class ContributionMasterPanel extends FormPanel {
             </Grid>
           }      
           {
-            edited.payType == "F" &&
+            edited.payType === "F" &&
             <Grid item xs={3} className={classes.item}>
               <ValidatedTextInput
                 action={validateReceipt}
@@ -268,7 +268,7 @@ class ContributionMasterPanel extends FormPanel {
           }
           <Grid item xs={6} className={classes.item}>
             {
-              edited.payType == "F" &&
+              edited.payType === "F" &&
               <>
                 <input
                   accept="image/*"
@@ -287,7 +287,7 @@ class ContributionMasterPanel extends FormPanel {
                     color="primary"
                     component="span"
                   >
-                  Add Image {edited?.attachment && "(1)"}
+                  Add receipt image {edited?.attachment ? `(${edited.attachment.length})` : ""}
                   </Button>
                 </label>
                 

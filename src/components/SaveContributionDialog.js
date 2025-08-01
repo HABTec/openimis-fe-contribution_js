@@ -24,7 +24,7 @@ const SaveContributionDialog = ({
     if (!contribution.policy || !contribution.policy.value) return null;
     const [step, setStep] = useState(1);
     const sumPremiums = parseInt(contribution.policy.sumPremiums || 0, 10);
-    const amount = parseInt(contribution.payType == 'O' ? contribution.policy?.value :  contribution.amount, 10) + sumPremiums;
+    const amount = parseInt(contribution.payType === 'O' ? contribution.policy?.value :  contribution.amount, 10) + sumPremiums;
     const policyValue = parseInt(contribution.policy.value, 10);
     const max_installments = contribution?.policy?.product?.maxInstallments;
 
