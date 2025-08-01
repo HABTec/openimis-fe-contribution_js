@@ -4,7 +4,7 @@ export const RIGHT_CONTRIBUTION_ADD = 101302
 export const RIGHT_CONTRIBUTION_EDIT = 101303
 export const RIGHT_CONTRIBUTION_DELETE = 101304
 
-export const PREMIUM_PAYMENT_TYPES = ["C", "B", "M"];
+export const PREMIUM_PAYMENT_TYPES = ["O", "F"]
 export const PREMIUM_CATEGORIES = ["contribution", "photoFee"];
 export const FAMILY_TYPE_POLYGAMY_CODE = "P"
 export const INSUREE_FAMILY_ROUTE_REF = "insuree.route.familyOverview";

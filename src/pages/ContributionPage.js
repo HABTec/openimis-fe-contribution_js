@@ -18,6 +18,7 @@ class ContributionPage extends Component {
 
 
     save = async (contribution) => {
+        
         if (!contribution.uuid) {
             const response = await this.props.createContribution(
                 this.props.modulesManager,
@@ -29,8 +30,10 @@ class ContributionPage extends Component {
                 )
             );
 
-            const url = response.payload.data.createPremium.paymentLink
-            window.open(url, '_blank').focus();
+            const url = response.payload.data?.createPremium?.paymentLink
+            if(url != null){
+                window.open(url, '_blank').focus();
+            }
         } else {
             this.props.updateContribution(
                 this.props.modulesManager,
