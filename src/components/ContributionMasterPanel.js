@@ -4,7 +4,7 @@ import { injectIntl } from "react-intl";
 
 import { withTheme, withStyles } from "@material-ui/core/styles";
 import { Grid } from "@material-ui/core";
-
+import Button from '@material-ui/core/Button';
 import {
   withHistory,
   withModulesManager,
@@ -16,12 +16,22 @@ import {
   formatMessage,
   FormPanel,
   WarningBox,
+
 } from "@openimis/fe-core";
 import {
   validateReceipt,
   clearReceiptValidation,
   setReceiptValid,
 } from "../actions";
+import AttachFileIcon from '@material-ui/icons/AttachFile';
+import Chip from '@material-ui/core/Chip';
+import CloseIcon from '@material-ui/icons/Close';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
 
 const styles = (theme) => ({
   tableTitle: theme.table.title,
@@ -32,11 +42,13 @@ const styles = (theme) => ({
 });
 
 class ContributionMasterPanel extends FormPanel {
+
   shouldValidate = (inputValue) => {
     const { savedCode } = this.props;
     const shouldValidate = inputValue !== savedCode;
     return shouldValidate;
   };
+  
 
   renderWarning = () => {
     const { intl, edited } = this.props;
@@ -77,6 +89,7 @@ class ContributionMasterPanel extends FormPanel {
 
     return null;
   };
+  
 
   render() {
     const {
@@ -88,9 +101,9 @@ class ContributionMasterPanel extends FormPanel {
       isReceiptValidating,
       receiptValidationError,
       contributionTotalCount,
+      handleOCR
     } = this.props;
     const productCode = edited?.policy?.product?.code;
-
     const maxInstallments = edited?.policy?.product?.maxInstallments;
     const balance =
       Number(edited?.policy?.value) -
@@ -179,95 +192,18 @@ class ContributionMasterPanel extends FormPanel {
           )}
           <Grid item xs={3} className={classes.item}>
             <PublishedComponent
-              pubRef='core.DatePicker'
-              value={!edited ? '' : edited.payDate}
-              module='contribution'
-              required
-              label='contribution.payDate'
-              readOnly={readOnly}
-              onChange={(c) => this.updateAttribute('payDate', c)}
-            />
-          </Grid>
-          <Grid item xs={3} className={classes.item}>
-            <PublishedComponent
-              pubRef='payer.PayerPicker'
-              withNull={true}
-              readOnly={readOnly}
-              value={!edited ? '' : edited.payer}
-              onChange={(p) => this.updateAttribute('payer', p)}
-            />
-          </Grid>
-          <Grid item xs={3} className={classes.item}>
-            <PublishedComponent
               pubRef='contribution.PremiumPaymentTypePicker'
               withNull={false}
               required
               readOnly={readOnly}
               value={!edited ? '' : edited.payType}
-              onChange={(c) => this.updateAttribute('payType', c)}
-            />
-          </Grid>
-          <Grid item xs={3} className={classes.item}>
-            <PublishedComponent
-              pubRef='contribution.PremiumCategoryPicker'
-              withNull={false}
-              readOnly={readOnly}
-              value={edited && edited.isPhotoFee ? 'photoFee' : 'contribution'}
               onChange={(c) => {
-                return this.updateAttribute('isPhotoFee', c === 'photoFee');
+                if (c === 'O') {
+                  this.updateAttribute('payDate', new Date().toISOString().split('T')[0]);
+                  this.updateAttribute('amount', edited?.policy?.value);
+                }
+                this.updateAttribute('payType', c)
               }}
-            />
-          </Grid>
-          <Grid item xs={3} className={classes.item}>
-            <ValidatedTextInput
-              action={validateReceipt}
-              clearAction={clearReceiptValidation}
-              setValidAction={setReceiptValid}
-              codeTakenLabel={formatMessageWithValues(
-                intl,
-                'contribution',
-                'alreadyUsed',
-                { productCode }
-              )}
-              isValid={isReceiptValid}
-              isValidating={isReceiptValidating}
-              itemQueryIdentifier='code'
-              label='contribution.receipt'
-              module='contribution'
-              onChange={(receipt) => this.updateAttribute('receipt', receipt)}
-              readOnly={readOnly}
-              required={true}
-              additionalQueryArgs={{ policyUuid: edited?.policy?.uuid }}
-              shouldValidate={this.shouldValidate}
-              validationError={receiptValidationError}
-              value={edited?.receipt ?? ''}
-            />
-          </Grid>
-          <Grid item xs={3} className={classes.item}>
-            <AmountInput
-              module='contribution'
-              label='contribution.amount'
-              required
-              readOnly={
-                readOnly ||
-                maxInstallments === 0 ||
-                maxInstallments === 1 ||
-                (!edited.id &&
-                  maxInstallments > 1 &&
-                  contributionTotalCount === maxInstallments - 1)
-              }
-              value={edited.amount}
-              max={
-                !edited.id &&
-                edited?.amount >
-                  edited.policy?.value - edited.policy?.sumPremiums
-                  ? parseFloat(
-                      edited.policy?.value - edited.policy?.sumPremiums
-                    ).toFixed(2)
-                  : null
-              }
-              displayZero={true}
-              onChange={(c) => this.updateAttribute('amount', c)}
             />
           </Grid>
           <Grid item xs={3} className={classes.item}>
@@ -289,6 +225,105 @@ class ContributionMasterPanel extends FormPanel {
               displayZero={true}
             />
           </Grid>
+          {
+            edited.payType === "F" &&
+            <Grid item xs={3} className={classes.item}>
+              <PublishedComponent
+                pubRef='core.DatePicker'
+                value={!edited ? '' : edited.payDate}
+                module='contribution'
+                label='contribution.payDate'
+                readOnly={readOnly}
+                onChange={(c) => this.updateAttribute('payDate', c)}
+              />
+            </Grid>
+          }      
+          {
+            edited.payType === "F" &&
+            <Grid item xs={3} className={classes.item}>
+              <ValidatedTextInput
+                action={validateReceipt}
+                clearAction={clearReceiptValidation}
+                setValidAction={setReceiptValid}
+                codeTakenLabel={formatMessageWithValues(
+                  intl,
+                  'contribution',
+                  'alreadyUsed',
+                  { productCode }
+                )}
+                isValid={isReceiptValid}
+                isValidating={isReceiptValidating}
+                itemQueryIdentifier='code'
+                label='contribution.receipt'
+                module='contribution'
+                onChange={(receipt) => this.updateAttribute('receipt', receipt)}
+                readOnly={readOnly}
+                required={true}
+                additionalQueryArgs={{ policyUuid: edited?.policy?.uuid }}
+                shouldValidate={this.shouldValidate}
+                validationError={receiptValidationError}
+                value={edited?.receipt ?? ''}
+              />
+            </Grid>
+          }
+          <Grid item xs={6} className={classes.item}>
+            {
+              edited.payType === "F" &&
+              <>
+                <input
+                  accept="image/*"
+                  style={{ display: 'none' }}
+                  id="raised-button-file"
+                  type="file"
+                  onChange={async (e) =>  {
+                    const file = e.target.files[0];
+                    handleOCR(file);
+                      this.updateAttribute('attachment', [{ file }]);
+                  }}
+                />
+                <label htmlFor="raised-button-file">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    component="span"
+                  >
+                  Add receipt image {edited?.attachment ? `(${edited.attachment.length})` : ""}
+                  </Button>
+                </label>
+                
+                {
+                  this.props.ocrText && 
+                <Button
+                    variant="contained"
+                    color="secondary"
+                    component="span"
+                    onClick={this.props.openDialog}
+                  >
+                  View Text
+                  </Button>
+                }
+                <Dialog
+                  open={this.props.isDialogOpen}
+                  onClose={this.props.closeDialog}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                >
+                  <DialogTitle id="alert-dialog-title">Detected text from image</DialogTitle>
+                  <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                      {this.props.ocrText}
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={this.props.closeDialog} color="primary">
+                      Close
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+              </>
+            }
+          </Grid>
+
         </Grid>
       );
   }

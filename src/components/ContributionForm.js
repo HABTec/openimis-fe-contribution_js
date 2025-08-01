@@ -30,6 +30,7 @@ import {
 import { INSUREE_FAMILY_ROUTE_REF, RIGHT_CONTRIBUTION } from "../constants";
 import ContributionMasterPanel from "./ContributionMasterPanel";
 import SaveContributionDialog from "./SaveContributionDialog";
+import { createWorker } from "tesseract.js";
 
 const styles = (theme) => ({
   lockedPage: theme.page.locked,
@@ -49,6 +50,20 @@ class ContributionForm extends Component {
     contribution: this._newContribution(),
     newContribution: true,
     saveContribution: false,
+    ocrText: null,
+    isDialogOpen: false,
+  };
+
+  openDialog = () => {
+    this.setState({
+      isDialogOpen: true,
+    });
+  };
+
+  closeDialog = () => {
+    this.setState({
+      isDialogOpen: false,
+    });
   };
 
   componentDidMount() {
@@ -187,8 +202,8 @@ class ContributionForm extends Component {
   };
 
   canSave = () => {
+
     const { contribution } = this.state;
-    const { isReceiptValid } = this.props;
     if (
       contribution?.policy?.product?.maxInstallments === 0 ||
       contribution.amount >
@@ -200,16 +215,17 @@ class ContributionForm extends Component {
     if (
       !contribution ||
       (contribution &&
-        (!contribution.payDate ||
+        (
           !contribution.payType ||
-          !contribution.amount ||
-          !contribution.receipt ||
           !contribution.policy ||
           contribution.validityTo ||
-          (contribution.policy && !contribution.policy.uuid) ||
-          !isReceiptValid))
+          (contribution.policy && !contribution.policy.uuid)
+        ))
     )
       return false;
+    if (contribution.payType === "F" && (!contribution.payDate || !contribution.receipt )) {
+      return false;
+    }
     return true;
   };
 
@@ -259,6 +275,12 @@ class ContributionForm extends Component {
       console.error(`[CONTRIBUTION_FORM]: ${error}`);
     }
   };
+  handleOcr = async (file) => {
+    const worker = await createWorker('eng');
+    const ret = await worker.recognize(file);
+    this.setState({ ocrText: ret.data.text });
+    await worker.terminate();
+  }
 
   render() {
     const {
@@ -328,35 +350,41 @@ class ContributionForm extends Component {
           !!contribution &&
           contribution.uuid === contribution_uuid) ||
           !contribution_uuid) && (
-          <Form
-            module="contribution"
-            title={
-              !!newContribution
-                ? "ContributionOverview.newTitle"
-                : "ContributionOverview.title"
-            }
-            edited_id={contribution_uuid}
-            edited={contribution}
-            reset={reset}
-            back={back}
-            // add={!!add && !newContribution ? this._add : null}
-            readOnly={
-              readOnly ||
-              runningMutation ||
-              (contribution && !!contribution.validityTo)
-            }
-            actions={actions}
-            overview={overview}
-            HeadPanel={ContributionMasterPanel}
-            contribution={contribution}
-            onEditedChanged={this.onEditedChanged}
-            canSave={this.canSave}
-            save={!!save ? this.confirmSave : null}
-            update={update}
-            onActionToConfirm={this.onActionToConfirm}
-            openDirty={save}
-          />
-        )}
+            <Form
+              module="contribution"
+              title={
+                !!newContribution
+                  ? "ContributionOverview.newTitle"
+                  : "ContributionOverview.title"
+              }
+              edited_id={contribution_uuid}
+              edited={contribution}
+              reset={reset}
+              back={back}
+              // add={!!add && !newContribution ? this._add : null}
+              readOnly={
+                readOnly ||
+                runningMutation ||
+                (contribution && !!contribution.validityTo)
+              }
+              actions={actions}
+              overview={overview}
+              HeadPanel={ContributionMasterPanel}
+              contribution={contribution}
+              onEditedChanged={this.onEditedChanged}
+              canSave={this.canSave}
+              save={!!save ? this.confirmSave : null}
+              update={update}
+              onActionToConfirm={this.onActionToConfirm}
+              openDirty={save}
+              handleOCR={this.handleOcr}
+              ocrText={this.state.ocrText}
+              isDialogOpen={this.state.isDialogOpen}
+              openDialog={this.openDialog} 
+              closeDialog={this.closeDialog}
+            />
+
+          )}
       </div>
     );
   }

@@ -96,7 +96,7 @@ export function formatContributionGQL(mm, contribution) {
     ${!!contribution.payType ? `payType: "${contribution.payType}"` : ""}
     ${`isPhotoFee: ${contribution.isPhotoFee}`}
     ${!!contribution.action ? `action: "${contribution.action}"` : ""}
-    ${!!contribution.amount ? `amount: "${contribution.amount}"` : ""}
+    ${!!contribution.amount ? `amount: "${0}"` : ""}
     ${!!contribution.payer ? `payerUuid: "${contribution.payer.uuid}"` : ""}
     ${
       !!contribution.jsonExt
@@ -120,7 +120,7 @@ export function fetchPolicySummary(mm, policyUuid) {
     "id",
     "uuid",
     "startDate",
-    "product{name, code, maxInstallments}",
+    "product{name, code}",
     "expiryDate",
     "value",
     "sumPremiums",
