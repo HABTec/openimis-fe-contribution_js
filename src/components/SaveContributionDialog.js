@@ -91,46 +91,10 @@ const SaveContributionDialog = ({
             </DialogContent> */}
             <DialogActions>
 
-                {
-                    amount === policyValue && (
                         <Button onClick={e => onConfirm()} className={classes.primaryButton} autoFocus>
                             <FormattedMessage module="contribution" id="saveContributionDialog.ok.button" />
                         </Button>
-                    )
-                }
-
-                {
-                    amount < policyValue && (
-                        <>
-                            {
-                                step === 1 && (
-                                    <Button onClick={e => setStep(2)} className={classes.primaryButton} autoFocus>
-                                        <FormattedMessage module="contribution" id="saveContributionDialog.ok.button" />
-                                    </Button>
-                                )
-                            }
-                            {
-                                step === 2 && (
-                                    <>
-                                        <Button onClick={e => onConfirm('ENFORCE')} className={classes.primaryButton} autoFocus>
-                                            <FormattedMessage module="contribution" id="saveContributionDialog.yes.button" />
-                                        </Button>
-                                        <Button onClick={e => onConfirm('WAIT')} className={classes.primaryButton} autoFocus>
-                                            <FormattedMessage module="contribution" id="saveContributionDialog.no.button" />
-                                        </Button>
-                                    </>
-                                )
-                            }
-                        </>
-                    )
-                }
-                {
-                    step === 1 && (
-                        <Button onClick={onCancel} className={classes.secondaryButton} >
-                            <FormattedMessage module="core" id="cancel" />
-                        </Button>
-                    )
-                }
+               
             </DialogActions>
         </Dialog>
     );
