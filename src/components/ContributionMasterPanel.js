@@ -113,7 +113,7 @@ class ContributionMasterPanel extends FormPanel {
         <Grid container className={classes.item}>
           {!!edited && !!edited.policy && !!edited.policy.value && (
             <>
-              {this.renderWarning()}
+              {/* {this.renderWarning()} */}
               <Grid item xs={3} className={classes.item}>
                 <TextInput
                   module='contribution'
