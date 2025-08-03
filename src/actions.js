@@ -96,7 +96,7 @@ export function formatContributionGQL(mm, contribution) {
     ${!!contribution.payType ? `payType: "${contribution.payType}"` : ""}
     ${`isPhotoFee: ${contribution.isPhotoFee}`}
     ${!!contribution.action ? `action: "${contribution.action}"` : ""}
-    ${!!contribution.amount ? `amount: "${0}"` : ""}
+    ${`amount: "0"`}
     ${!!contribution.payer ? `payerUuid: "${contribution.payer.uuid}"` : ""}
     ${
       !!contribution.jsonExt
