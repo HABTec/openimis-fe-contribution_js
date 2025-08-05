@@ -30,7 +30,7 @@ class ContributionPage extends Component {
                 )
             );
 
-            const url = response.payload.data?.createPremium?.paymentLink
+            const url = response?.payload.data?.createPremium?.paymentLink
             if(url != null){
                 window.open(url, '_blank').focus();
             }
