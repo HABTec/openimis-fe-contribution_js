@@ -30,7 +30,6 @@ import {
 import { INSUREE_FAMILY_ROUTE_REF, RIGHT_CONTRIBUTION } from "../constants";
 import ContributionMasterPanel from "./ContributionMasterPanel";
 import SaveContributionDialog from "./SaveContributionDialog";
-import { createWorker } from "tesseract.js";
 
 const styles = (theme) => ({
   lockedPage: theme.page.locked,
@@ -50,19 +49,18 @@ class ContributionForm extends Component {
     contribution: this._newContribution(),
     newContribution: true,
     saveContribution: false,
-    ocrText: null,
-    isDialogOpen: false,
+    isLoading: false,
   };
 
-  openDialog = () => {
+  startLoading = () => {
     this.setState({
-      isDialogOpen: true,
+      isLoading: true,
     });
   };
 
-  closeDialog = () => {
+  stopLoading = () => {
     this.setState({
-      isDialogOpen: false,
+      isLoading: false,
     });
   };
 
@@ -275,12 +273,7 @@ class ContributionForm extends Component {
       console.error(`[CONTRIBUTION_FORM]: ${error}`);
     }
   };
-  handleOcr = async (file) => {
-    const worker = await createWorker('eng');
-    const ret = await worker.recognize(file);
-    this.setState({ ocrText: ret.data.text });
-    await worker.terminate();
-  }
+
 
   render() {
     const {
@@ -377,11 +370,11 @@ class ContributionForm extends Component {
               update={update}
               onActionToConfirm={this.onActionToConfirm}
               openDirty={save}
-              handleOCR={this.handleOcr}
+              isOCRLoading={this.state.isLoading}
               ocrText={this.state.ocrText}
               isDialogOpen={this.state.isDialogOpen}
-              openDialog={this.openDialog} 
-              closeDialog={this.closeDialog}
+              startLoading={this.startLoading} 
+              stopLoading={this.stopLoading}
             />
 
           )}

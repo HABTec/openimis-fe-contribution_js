@@ -31,8 +31,10 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-
-
+import { createWorker } from "tesseract.js";
+import CircularProgress from '@material-ui/core/CircularProgress';
+import DoneIcon from '@material-ui/icons/Done';
+import HourglassEmptyRoundedIcon from '@material-ui/icons/HourglassEmptyRounded';
 const styles = (theme) => ({
   tableTitle: theme.table.title,
   item: theme.paper.item,
@@ -89,6 +91,16 @@ class ContributionMasterPanel extends FormPanel {
 
     return null;
   };
+
+   handleOcr = async (file) => {
+    const worker = await createWorker('eng');
+    const ret = await worker.recognize(file);
+    // this.setState({ ocrText: ret.data.text });
+    this.updateAttribute('receipt', ret.data.text)
+    this.props.stopLoading();
+    console.log("OCR Result: ", ret.data.text);
+    await worker.terminate();
+  }
   
 
   render() {
@@ -101,7 +113,7 @@ class ContributionMasterPanel extends FormPanel {
       isReceiptValidating,
       receiptValidationError,
       contributionTotalCount,
-      handleOCR
+      
     } = this.props;
     const productCode = edited?.policy?.product?.code;
     const maxInstallments = edited?.policy?.product?.maxInstallments;
@@ -277,7 +289,8 @@ class ContributionMasterPanel extends FormPanel {
                   type="file"
                   onChange={async (e) =>  {
                     const file = e.target.files[0];
-                    handleOCR(file);
+                    this.props.startLoading();
+                    this.handleOcr(file);
                       this.updateAttribute('attachment', [{ file }]);
                   }}
                 />
@@ -286,41 +299,36 @@ class ContributionMasterPanel extends FormPanel {
                     variant="contained"
                     color="primary"
                     component="span"
+                    disabled={this.props.isOCRLoading}
                   >
-                  Add receipt image {edited?.attachment ? `(${edited.attachment.length})` : ""}
+                    Add receipt image
+                    {edited?.attachment ? ` (${edited.attachment.length})` : ""}
+                    {this.props.isOCRLoading && <CircularProgress size={20} /> }
                   </Button>
                 </label>
-                
-                {
-                  this.props.ocrText && 
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    component="span"
-                    onClick={this.props.openDialog}
-                  >
-                  View Text
-                  </Button>
-                }
-                <Dialog
-                  open={this.props.isDialogOpen}
-                  onClose={this.props.closeDialog}
-                  aria-labelledby="alert-dialog-title"
-                  aria-describedby="alert-dialog-description"
-                >
-                  <DialogTitle id="alert-dialog-title">Detected text from image</DialogTitle>
-                  <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                      {this.props.ocrText}
-                    </DialogContentText>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={this.props.closeDialog} color="primary">
-                      Close
-                    </Button>
-                  </DialogActions>
-                </Dialog>
               </>
+            }
+          </Grid>
+          <Grid item xs={6} className={classes.item}>
+            {
+              edited.paymentStatus === "S" && edited.payType === "O" && (
+                <>
+                <Chip
+                  icon={<DoneIcon />}
+                  label="Sucess"
+                  color="primary"
+                />
+                <Button color="primary">Download Receipt</Button>
+                </>
+              )
+            }
+                        {
+              edited.paymentStatus === "P" && edited.payType === "O" && (
+                <Chip
+                  icon={ <HourglassEmptyRoundedIcon/> }
+                  label="Pending Payment"
+                />
+              )
             }
           </Grid>
 
