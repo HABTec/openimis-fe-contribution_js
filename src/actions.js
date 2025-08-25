@@ -94,6 +94,7 @@ export function formatContributionGQL(mm, contribution) {
     }
     ${!!contribution.payDate ? `payDate: "${contribution.payDate}"` : ""}
     ${!!contribution.payType ? `payType: "${contribution.payType}"` : ""}
+    ${!!contribution.phoneNumber ? `phoneNumber: "${contribution.phoneNumber}"` : ""}
     ${`isPhotoFee: ${contribution.isPhotoFee}`}
     ${!!contribution.action ? `action: "${contribution.action}"` : ""}
     ${`amount: "0"`}
