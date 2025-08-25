@@ -56,6 +56,7 @@
     "contribution.policy.name": "Policy name",
     "contribution.policy.value": "Policy value",
     "contribution.policy.startDate": "Start date",
+    "contribution.PhoneNumber": "Phone Number",
     "contribution.policy.expiryDate": "Expiry date",
     "contribution.PremiumCollectionReport.dateStart": "Date From",
     "contribution.PremiumCollectionReport.dateEnd": "Date To",

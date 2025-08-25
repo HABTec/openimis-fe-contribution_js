@@ -219,6 +219,15 @@ class ContributionMasterPanel extends FormPanel {
             />
           </Grid>
           <Grid item xs={3} className={classes.item}>
+            <TextInput
+              module='contribution'
+              label='contribution.PhoneNumber'
+              readOnly={false}
+              value={edited.policy?.phoneNumber}
+              onChange={(c) => this.updateAttribute('phoneNumber', c)}
+            />
+          </Grid>
+          <Grid item xs={3} className={classes.item}>
             <AmountInput
               module='policy'
               label='Policy.sumPremiums'
@@ -309,28 +318,7 @@ class ContributionMasterPanel extends FormPanel {
               </>
             }
           </Grid>
-          <Grid item xs={6} className={classes.item}>
-            {
-              edited.paymentStatus === "S" && edited.payType === "O" && (
-                <>
-                <Chip
-                  icon={<DoneIcon />}
-                  label="Sucess"
-                  color="primary"
-                />
-                <Button color="primary">Download Receipt</Button>
-                </>
-              )
-            }
-                        {
-              edited.paymentStatus === "P" && edited.payType === "O" && (
-                <Chip
-                  icon={ <HourglassEmptyRoundedIcon/> }
-                  label="Pending Payment"
-                />
-              )
-            }
-          </Grid>
+          
 
         </Grid>
       );
