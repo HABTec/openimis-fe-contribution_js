@@ -57,6 +57,7 @@
     "contribution.policy.value": "Policy value",
     "contribution.policy.startDate": "Start date",
     "contribution.PhoneNumber": "Phone Number",
+    "contribution.InvalidPhoneNumber": "Phone Number should start with 09 or 07 and be 10 digits long",
     "contribution.policy.expiryDate": "Expiry date",
     "contribution.PremiumCollectionReport.dateStart": "Date From",
     "contribution.PremiumCollectionReport.dateEnd": "Date To",

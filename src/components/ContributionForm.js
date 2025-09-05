@@ -198,6 +198,14 @@ class ContributionForm extends Component {
       contribution.clientMutationId
     );
   };
+  checkPhoneNumberValidity = (phoneNumber) => {
+      const pattern = /^(?:07|09)\d{8}$/;
+      console.log(pattern.test(String(phoneNumber)) , String(phoneNumber));
+      if (!pattern.test(String(phoneNumber))) {
+        return false;
+      }
+      return true;
+    }
 
   canSave = () => {
 
@@ -209,12 +217,18 @@ class ContributionForm extends Component {
       (contribution?.id && contribution?.policy?.product?.maxInstallments === 1)
     )
       return false;
+
+    if (contribution.payType === "O" && (!contribution.phoneNumber)) {
+      return false;
+    }
+    if (contribution.payType === "O" && (!this.checkPhoneNumberValidity(String(contribution.phoneNumber)))) {
+      return false;
+    }
     if (
       !contribution ||
       (contribution &&
         (
           !contribution.payType ||
-          !contribution.phoneNumber ||
           !contribution.policy ||
           contribution.validityTo ||
           (contribution.policy && !contribution.policy.uuid)

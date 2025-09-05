@@ -101,7 +101,13 @@ class ContributionMasterPanel extends FormPanel {
     console.log("OCR Result: ", ret.data.text);
     await worker.terminate();
   }
-  
+  checkPhoneNumberValidity = (phoneNumber) => {
+    const pattern = /^(?:07|09)\d{8}$/;
+    console.log(pattern.test(String(phoneNumber)) , String(phoneNumber));
+    if (!pattern.test(String(phoneNumber))) {
+      return formatMessage(this.props.intl, "contribution", "InvalidPhoneNumber")
+    }
+  }
 
   render() {
     const {
@@ -218,15 +224,19 @@ class ContributionMasterPanel extends FormPanel {
               }}
             />
           </Grid>
-          <Grid item xs={3} className={classes.item}>
-            <TextInput
-              module='contribution'
-              label='contribution.PhoneNumber'
-              readOnly={false}
-              value={edited.policy?.phoneNumber}
-              onChange={(c) => this.updateAttribute('phoneNumber', c)}
-            />
-          </Grid>
+          {
+            edited.payType === "O" &&
+              <Grid item xs={3} className={classes.item}>
+                <TextInput
+                  module='contribution'
+                  label='contribution.PhoneNumber'
+                  readOnly={false}
+                  value={edited.phoneNumber}
+                  onChange={(c) => this.updateAttribute('phoneNumber', c)}
+                  error={this.checkPhoneNumberValidity(edited.phoneNumber)}
+                />
+              </Grid>
+          }
           <Grid item xs={3} className={classes.item}>
             <AmountInput
               module='policy'
