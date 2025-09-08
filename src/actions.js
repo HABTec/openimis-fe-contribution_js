@@ -6,6 +6,7 @@ import {
   formatMutation,
   formatJsonField,
   formatGQLString,
+  formatQuery
 } from "@openimis/fe-core";
 import _ from "lodash";
 import lodashUuid from "lodash-uuid";
@@ -37,6 +38,11 @@ export function fetchPoliciesPremiums(mm, filters) {
     "isPhotoFee",
   ]);
   return graphql(payload, "CONTRIBUTION_POLICES_PREMIUMS");
+}
+
+export function fetchPremiumValue(mm, policy_uuid) {
+  let payload = formatQuery("calculateTotalPremiums", policy_uuid,null);
+  return graphql(payload, "CONTRIBUTION_PREMIUM_VALUE");
 }
 
 export function fetchPoliciesPremiums2(mm, policyUuid) {

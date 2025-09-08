@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
-
+import Typography from '@material-ui/core/Typography';
 import { withTheme, withStyles } from "@material-ui/core/styles";
 import { Grid } from "@material-ui/core";
 import Button from '@material-ui/core/Button';
@@ -23,18 +23,8 @@ import {
   clearReceiptValidation,
   setReceiptValid,
 } from "../actions";
-import AttachFileIcon from '@material-ui/icons/AttachFile';
-import Chip from '@material-ui/core/Chip';
-import CloseIcon from '@material-ui/icons/Close';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import { createWorker } from "tesseract.js";
 import CircularProgress from '@material-ui/core/CircularProgress';
-import DoneIcon from '@material-ui/icons/Done';
-import HourglassEmptyRoundedIcon from '@material-ui/icons/HourglassEmptyRounded';
 const styles = (theme) => ({
   tableTitle: theme.table.title,
   item: theme.paper.item,
@@ -328,7 +318,21 @@ class ContributionMasterPanel extends FormPanel {
               </>
             }
           </Grid>
-          
+          {this.props.premiumValue && <Grid item xs={12} className={classes.item}>
+             <Typography variant="subtitle2" gutterBottom>
+              Family Size : {this.props.premiumValue?.family_size}
+            </Typography>
+            <Typography variant="subtitle2" gutterBottom>
+              Policy Value : {this.props.premiumValue?.premium_value}
+            </Typography>
+            <Typography variant="subtitle2" gutterBottom>
+              Additional Members : {this.props.premiumValue?.additional_members}
+            </Typography>
+            <Typography variant="subtitle2" gutterBottom>
+              Total Amount : {this.props.premiumValue?.total_amount}
+            </Typography>
+          </Grid>
+        }
 
         </Grid>
       );
