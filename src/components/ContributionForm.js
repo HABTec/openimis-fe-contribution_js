@@ -26,6 +26,7 @@ import {
   fetchPolicySummary,
   clearContribution,
   fetchPoliciesPremiums,
+  fetchPremiumValue
 } from "../actions";
 import { INSUREE_FAMILY_ROUTE_REF, RIGHT_CONTRIBUTION } from "../constants";
 import ContributionMasterPanel from "./ContributionMasterPanel";
@@ -72,6 +73,7 @@ class ContributionForm extends Component {
       fetchContribution,
       fetchPolicySummary,
       fetchPoliciesPremiums,
+      fetchPremiumValue
     } = this.props;
     if (contribution_uuid) {
       this.setState(
@@ -81,6 +83,7 @@ class ContributionForm extends Component {
     }
     if (policy_uuid) {
       fetchPolicySummary(modulesManager, [policy_uuid]);
+      fetchPremiumValue(modulesManager, [`policyUuid: "${policy_uuid}"`]);
       fetchPoliciesPremiums(modulesManager, [`policyUuids: "${policy_uuid}"`]);
       this.setState({
         contribution: {
@@ -198,6 +201,14 @@ class ContributionForm extends Component {
       contribution.clientMutationId
     );
   };
+  checkPhoneNumberValidity = (phoneNumber) => {
+      const pattern = /^(?:07|09)\d{8}$/;
+      console.log(pattern.test(String(phoneNumber)) , String(phoneNumber));
+      if (!pattern.test(String(phoneNumber))) {
+        return false;
+      }
+      return true;
+    }
 
   canSave = () => {
 
@@ -209,12 +220,18 @@ class ContributionForm extends Component {
       (contribution?.id && contribution?.policy?.product?.maxInstallments === 1)
     )
       return false;
+
+    if (contribution.payType === "O" && (!contribution.phoneNumber)) {
+      return false;
+    }
+    if (contribution.payType === "O" && (!this.checkPhoneNumberValidity(String(contribution.phoneNumber)))) {
+      return false;
+    }
     if (
       !contribution ||
       (contribution &&
         (
           !contribution.payType ||
-          !contribution.phoneNumber ||
           !contribution.policy ||
           contribution.validityTo ||
           (contribution.policy && !contribution.policy.uuid)
@@ -375,6 +392,9 @@ class ContributionForm extends Component {
               isDialogOpen={this.state.isDialogOpen}
               startLoading={this.startLoading} 
               stopLoading={this.stopLoading}
+              premiumValue={this.props.premiumValue && JSON.parse(this.props.premiumValue)}
+              fetchingPremiumValue={this.props.fetchingPremiumValue}
+              fetchedPremiumValue={this.props.fetchedPremiumValue}
             />
 
           )}
@@ -393,6 +413,9 @@ const mapStateToProps = (state, props) => ({
   fetchedContribution: state.contribution.fetchedContribution,
   installmentsNumber: state.contribution.policiesPremiumsPageInfo.totalCount,
   submittingMutation: state.contribution.submittingMutation,
+  fetchingPremiumValue: state.contribution.fetchingPremiumValue,
+  fetchedPremiumValue: state.contribution.fetchedPremiumValue,
+  premiumValue: state.contribution.premiumValue,
   policySummary: state.contribution.policySummary,
   mutation: state.contribution.mutation,
   contribution: state.contribution.contribution,
@@ -413,6 +436,7 @@ const mapDispatchToProps = (dispatch) => {
       clearContribution,
       journalize,
       coreConfirm,
+      fetchPremiumValue
     },
     dispatch
   );

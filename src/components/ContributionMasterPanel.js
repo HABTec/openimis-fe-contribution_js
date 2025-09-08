@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
-
+import Typography from '@material-ui/core/Typography';
 import { withTheme, withStyles } from "@material-ui/core/styles";
 import { Grid } from "@material-ui/core";
 import Button from '@material-ui/core/Button';
@@ -23,18 +23,8 @@ import {
   clearReceiptValidation,
   setReceiptValid,
 } from "../actions";
-import AttachFileIcon from '@material-ui/icons/AttachFile';
-import Chip from '@material-ui/core/Chip';
-import CloseIcon from '@material-ui/icons/Close';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import { createWorker } from "tesseract.js";
 import CircularProgress from '@material-ui/core/CircularProgress';
-import DoneIcon from '@material-ui/icons/Done';
-import HourglassEmptyRoundedIcon from '@material-ui/icons/HourglassEmptyRounded';
 const styles = (theme) => ({
   tableTitle: theme.table.title,
   item: theme.paper.item,
@@ -101,7 +91,13 @@ class ContributionMasterPanel extends FormPanel {
     console.log("OCR Result: ", ret.data.text);
     await worker.terminate();
   }
-  
+  checkPhoneNumberValidity = (phoneNumber) => {
+    const pattern = /^(?:07|09)\d{8}$/;
+    console.log(pattern.test(String(phoneNumber)) , String(phoneNumber));
+    if (!pattern.test(String(phoneNumber))) {
+      return formatMessage(this.props.intl, "contribution", "InvalidPhoneNumber")
+    }
+  }
 
   render() {
     const {
@@ -218,15 +214,19 @@ class ContributionMasterPanel extends FormPanel {
               }}
             />
           </Grid>
-          <Grid item xs={3} className={classes.item}>
-            <TextInput
-              module='contribution'
-              label='contribution.PhoneNumber'
-              readOnly={false}
-              value={edited.policy?.phoneNumber}
-              onChange={(c) => this.updateAttribute('phoneNumber', c)}
-            />
-          </Grid>
+          {
+            edited.payType === "O" &&
+              <Grid item xs={3} className={classes.item}>
+                <TextInput
+                  module='contribution'
+                  label='contribution.PhoneNumber'
+                  readOnly={false}
+                  value={edited.phoneNumber}
+                  onChange={(c) => this.updateAttribute('phoneNumber', c)}
+                  error={this.checkPhoneNumberValidity(edited.phoneNumber)}
+                />
+              </Grid>
+          }
           <Grid item xs={3} className={classes.item}>
             <AmountInput
               module='policy'
@@ -318,7 +318,21 @@ class ContributionMasterPanel extends FormPanel {
               </>
             }
           </Grid>
-          
+          {this.props.premiumValue && <Grid item xs={12} className={classes.item}>
+             <Typography variant="subtitle2" gutterBottom>
+              Family Size : {this.props.premiumValue?.family_size}
+            </Typography>
+            <Typography variant="subtitle2" gutterBottom>
+              Policy Value : {this.props.premiumValue?.premium_value}
+            </Typography>
+            <Typography variant="subtitle2" gutterBottom>
+              Additional Members : {this.props.premiumValue?.additional_members}
+            </Typography>
+            <Typography variant="subtitle2" gutterBottom>
+              Total Amount : {this.props.premiumValue?.total_amount}
+            </Typography>
+          </Grid>
+        }
 
         </Grid>
       );

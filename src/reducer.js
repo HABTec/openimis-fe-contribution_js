@@ -32,6 +32,23 @@ function reducer(
   action
 ) {
   switch (action.type) {
+    case "CONTRIBUTION_PREMIUM_VALUE_REQ":
+      return {
+        ...state,
+        fetchingPremiumValue: true,
+        fetchedPremiumValue: false,
+        premiumValue: null,
+        errorPremiumValue: null,
+      };
+    case "CONTRIBUTION_PREMIUM_VALUE_RESP":
+      return {
+        ...state,
+        fetchingPremiumValue: false,
+        fetchedPremiumValue: true,
+        premiumValue: action.payload.data.calculateTotalPremiums,
+        errorPremiumValue: formatGraphQLError(action.payload),
+      };
+    case "CONTRIBUTION_PREMIUM_VALUE_RESP":
     case "INSUREE_FAMILY_OVERVIEW_REQ":
       return {
         ...state,
