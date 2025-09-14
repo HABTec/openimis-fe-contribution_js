@@ -203,7 +203,6 @@ class ContributionForm extends Component {
   };
   checkPhoneNumberValidity = (phoneNumber) => {
       const pattern = /^(?:07|09)\d{8}$/;
-      console.log(pattern.test(String(phoneNumber)) , String(phoneNumber));
       if (!pattern.test(String(phoneNumber))) {
         return false;
       }
