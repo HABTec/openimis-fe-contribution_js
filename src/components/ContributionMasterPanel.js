@@ -88,12 +88,12 @@ class ContributionMasterPanel extends FormPanel {
     // this.setState({ ocrText: ret.data.text });
     this.updateAttribute('receipt', ret.data.text)
     this.props.stopLoading();
-    console.log("OCR Result: ", ret.data.text);
+    
     await worker.terminate();
   }
   checkPhoneNumberValidity = (phoneNumber) => {
     const pattern = /^(?:07|09)\d{8}$/;
-    console.log(pattern.test(String(phoneNumber)) , String(phoneNumber));
+    
     if (!pattern.test(String(phoneNumber))) {
       return formatMessage(this.props.intl, "contribution", "InvalidPhoneNumber")
     }
