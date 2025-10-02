@@ -48,7 +48,6 @@ function reducer(
         premiumValue: action.payload.data.calculateTotalPremiums,
         errorPremiumValue: formatGraphQLError(action.payload),
       };
-    case "CONTRIBUTION_PREMIUM_VALUE_RESP":
     case "INSUREE_FAMILY_OVERVIEW_REQ":
       return {
         ...state,

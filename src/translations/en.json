@@ -33,6 +33,7 @@
     "contribution.payType": "Payment Type",
     "contribution.payType.O": "Online Payment",
     "contribution.payType.F": "Offline Payment",
+    "contribution.payType.P": "POS Payment",
     "contribution.payType.null": "Any",
     "contribution.PoliciesPremiums": "{count} Contributions",
     "contribution.PoliciesPremiumsOfPolicy": "{count} Contributions of Policy {policy}",
@@ -83,5 +84,9 @@
     "contribution.familySummaries.dob": "Head Birth Date",
     "contribution.warning.header": "WARNING",
     "contribution.warning.paid.description": "The policy is already paid.",
-    "contribution.warning.paid.exceedsPolicyValue": "Sum of contributions exceeds policy value. Saving not allowed."
+    "contribution.warning.paid.exceedsPolicyValue": "Sum of contributions exceeds policy value. Saving not allowed.",
+    "contribution.contribution.familySize": "Family Size",
+    "contribution.contribution.premiumValue": "Premium Value",
+    "contribution.contribution.totalAmount": "Total Amount",
+    "contribution.contribution.additionalMember": "Additional Members"
 }

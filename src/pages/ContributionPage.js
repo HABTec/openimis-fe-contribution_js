@@ -4,10 +4,10 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { withTheme, withStyles } from "@material-ui/core/styles";
 import {
-    formatMessageWithValues, withModulesManager, withHistory,
+    formatMessageWithValues, withModulesManager, withHistory,decodeId
 } from "@openimis/fe-core";
 import ContributionForm from "../components/ContributionForm";
-import { createContribution, updateContribution } from "../actions";
+import { createContribution, fetchPremiumValue, updateContribution } from "../actions";
 import { RIGHT_CONTRIBUTION_EDIT } from "../constants";
 
 const styles = theme => ({
@@ -31,8 +31,12 @@ class ContributionPage extends Component {
             );
 
             const url = response?.payload.data?.createPremium?.paymentLink
+            const contribution_id = response?.payload.data?.createPremium?.contributionId	
             if(url != null){
                 window.open(url, '_blank').focus();
+            }
+            if(contribution.policy.uuid){
+                this.props.fetchPremiumValue( [`policyUuid: "${contribution.policy.uuid}" ${contribution_id ? `, contributionUuid: "${contribution_id}` : ""}"`]);
             }
         } else {
             this.props.updateContribution(
@@ -75,7 +79,7 @@ const mapStateToProps = (state, props) => ({
 })
 
 const mapDispatchToProps = dispatch => {
-    return bindActionCreators({ createContribution, updateContribution }, dispatch);
+    return bindActionCreators({ createContribution,fetchPremiumValue, updateContribution }, dispatch);
 };
 
 export default withHistory(withModulesManager(connect(mapStateToProps, mapDispatchToProps)(

@@ -32,6 +32,7 @@ const styles = (theme) => ({
     height: "100%",
   },
 });
+import { QRCodeCanvas } from 'qrcode.react';
 
 class ContributionMasterPanel extends FormPanel {
 
@@ -109,7 +110,7 @@ class ContributionMasterPanel extends FormPanel {
       isReceiptValidating,
       receiptValidationError,
       contributionTotalCount,
-      
+      paymentId
     } = this.props;
     const productCode = edited?.policy?.product?.code;
     const maxInstallments = edited?.policy?.product?.maxInstallments;
@@ -318,22 +319,37 @@ class ContributionMasterPanel extends FormPanel {
               </>
             }
           </Grid>
-          {this.props.premiumValue && <Grid item xs={12} className={classes.item}>
-             <Typography variant="subtitle2" gutterBottom>
-              Family Size : {this.props.premiumValue?.family_size}
-            </Typography>
-            <Typography variant="subtitle2" gutterBottom>
-              Policy Value : {this.props.premiumValue?.premium_value}
-            </Typography>
-            <Typography variant="subtitle2" gutterBottom>
-              Additional Members : {this.props.premiumValue?.additional_members}
-            </Typography>
-            <Typography variant="subtitle2" gutterBottom>
-              Total Amount : {this.props.premiumValue?.total_amount}
-            </Typography>
+          <Grid container item xs={12} spacing={2} >
+            <Grid item xs={6}>
+              {this.props.premiumValue && <Grid item xs={6} className={classes.item}>
+                <Typography variant="subtitle2" gutterBottom>
+                  {formatMessage(intl, 'contribution', 'contribution.familySize')} : {this.props.premiumValue?.familySize}
+                </Typography>
+                <Typography variant="subtitle2" gutterBottom>
+                  {formatMessage(intl, 'contribution', 'contribution.premiumValue')} : {this.props.premiumValue?.premiumValue}
+                </Typography>
+                <Typography variant="subtitle2" gutterBottom>
+                  {formatMessage(intl, 'contribution', 'contribution.totalAmount')} : {this.props.premiumValue?.additionalMembers}
+                </Typography>
+                <Typography variant="subtitle2" gutterBottom>
+                  {formatMessage(intl, 'contribution', 'contribution.additionalMember')} : {this.props.premiumValue?.totalAmount}
+                </Typography>
+              </Grid>
+              }
+            </Grid>
+            <Grid item xs={6} className={classes.item}>
+              {
+                edited.payType === "P" && this.props.premiumValue && this.props.premiumValue?.matchingPaymentId && this.props.premiumValue?.premiumValue && this.props.premiumValue?.familyId &&
+                <Grid item xs={6} className={classes.item}>
+                  <QRCodeCanvas value={JSON.stringify({
+                    familyId: this.props.premiumValue?.familyId,
+                    amount: this.props.premiumValue?.premiumValue,
+                    matchingPaymentId: this.props.premiumValue?.matchingPaymentId,
+                  })} />
+                </Grid>
+              }
+            </Grid>
           </Grid>
-        }
-
         </Grid>
       );
   }
