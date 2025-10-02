@@ -40,8 +40,8 @@ export function fetchPoliciesPremiums(mm, filters) {
   return graphql(payload, "CONTRIBUTION_POLICES_PREMIUMS");
 }
 
-export function fetchPremiumValue(mm, policy_uuid) {
-  let payload = formatQuery("calculateTotalPremiums", policy_uuid,null);
+export function fetchPremiumValue( policy_uuid) {
+  let payload = formatQuery("calculateTotalPremiums", policy_uuid, ["totalAmount", "additionalMembers","familyId","familySize", "premiumValue","matchingPaymentId"]);
   return graphql(payload, "CONTRIBUTION_PREMIUM_VALUE");
 }
 
@@ -165,7 +165,7 @@ export function createContribution(mm, contribution, clientMutationLabel) {
     formatContributionGQL(mm, contribution),
     clientMutationLabel,
     undefined,
-    "paymentLink"
+    "paymentLink paymentId contributionId",
   );
 
   var requestedDateTime = new Date();
@@ -258,6 +258,11 @@ export function setReceiptValid(mm) {
 export function clearReceiptValidation(mm) {
   return (dispatch) => {
     dispatch({ type: `CONTRIBUTION_FIELDS_VALIDATION_CLEAR` });
+  };
+}
+export function clearPaymentID(mm) {
+  return (dispatch) => {
+    dispatch({ type: `CONTRIBUTION_PAYMENT_ID` });
   };
 }
 

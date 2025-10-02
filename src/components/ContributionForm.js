@@ -18,6 +18,7 @@ import {
   journalize,
   coreConfirm,
   Helmet,
+  
 } from "@openimis/fe-core";
 import {
   fetchContribution,
@@ -73,7 +74,8 @@ class ContributionForm extends Component {
       fetchContribution,
       fetchPolicySummary,
       fetchPoliciesPremiums,
-      fetchPremiumValue
+      fetchPremiumValue,
+      contribution_id
     } = this.props;
     if (contribution_uuid) {
       this.setState(
@@ -83,7 +85,7 @@ class ContributionForm extends Component {
     }
     if (policy_uuid) {
       fetchPolicySummary(modulesManager, [policy_uuid]);
-      fetchPremiumValue(modulesManager, [`policyUuid: "${policy_uuid}"`]);
+      fetchPremiumValue([`policyUuid: "${policy_uuid}" ${contribution_id ? `, contributionUuid: ${contribution_id}` : ""}`]);
       fetchPoliciesPremiums(modulesManager, [`policyUuids: "${policy_uuid}"`]);
       this.setState({
         contribution: {
@@ -391,7 +393,7 @@ class ContributionForm extends Component {
               isDialogOpen={this.state.isDialogOpen}
               startLoading={this.startLoading} 
               stopLoading={this.stopLoading}
-              premiumValue={this.props.premiumValue && JSON.parse(this.props.premiumValue)}
+              premiumValue={this.props.premiumValue}
               fetchingPremiumValue={this.props.fetchingPremiumValue}
               fetchedPremiumValue={this.props.fetchedPremiumValue}
             />
