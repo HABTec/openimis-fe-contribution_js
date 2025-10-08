@@ -88,5 +88,9 @@
     "contribution.contribution.familySize": "Family Size",
     "contribution.contribution.premiumValue": "Premium Value",
     "contribution.contribution.totalAmount": "Total Amount",
-    "contribution.contribution.additionalMember": "Additional Members"
+    "contribution.contribution.additionalMember": "Additional Members",
+    "contribution.contribution.familyId": "Family Id",
+    "contribution.contribution.paymentId": "Payment Id"
+
+
 }

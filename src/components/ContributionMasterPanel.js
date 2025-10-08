@@ -329,21 +329,27 @@ class ContributionMasterPanel extends FormPanel {
                   {formatMessage(intl, 'contribution', 'contribution.premiumValue')} : {this.props.premiumValue?.premiumValue}
                 </Typography>
                 <Typography variant="subtitle2" gutterBottom>
-                  {formatMessage(intl, 'contribution', 'contribution.totalAmount')} : {this.props.premiumValue?.additionalMembers}
+                  {formatMessage(intl, 'contribution', 'contribution.totalAmount')} : {this.props.premiumValue?.totalAmount}
                 </Typography>
                 <Typography variant="subtitle2" gutterBottom>
-                  {formatMessage(intl, 'contribution', 'contribution.additionalMember')} : {this.props.premiumValue?.totalAmount}
+                  {formatMessage(intl, 'contribution', 'contribution.additionalMember')} : {this.props.premiumValue?.additionalMembers}
                 </Typography>
+               {this.props.premiumValue?.familyId && <Typography variant="subtitle2" gutterBottom>
+                  {formatMessage(intl, 'contribution', 'contribution.familyId')} : {this.props.premiumValue?.familyId}
+                </Typography>}
+                {this.props.premiumValue?.matchingPaymentId && <Typography variant="subtitle2" gutterBottom>
+                  {formatMessage(intl, 'contribution', 'contribution.paymentId')} : {this.props.premiumValue?.matchingPaymentId}
+                </Typography>}
               </Grid>
               }
             </Grid>
             <Grid item xs={6} className={classes.item}>
               {
-                edited.payType === "P" && this.props.premiumValue && this.props.premiumValue?.matchingPaymentId && this.props.premiumValue?.premiumValue && this.props.premiumValue?.familyId &&
+                edited.payType == "P" && this.props.premiumValue && this.props.premiumValue?.matchingPaymentId && this.props.premiumValue?.totalAmount != null && this.props.premiumValue?.familyId &&
                 <Grid item xs={6} className={classes.item}>
                   <QRCodeCanvas value={JSON.stringify({
                     familyId: this.props.premiumValue?.familyId,
-                    amount: this.props.premiumValue?.premiumValue,
+                    amount: this.props.premiumValue?.totalAmount,
                     matchingPaymentId: this.props.premiumValue?.matchingPaymentId,
                   })} />
                 </Grid>
