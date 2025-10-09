@@ -31,13 +31,17 @@ class ContributionPage extends Component {
             );
 
             const url = response?.payload.data?.createPremium?.paymentLink
-            const contribution_id = response?.payload.data?.createPremium?.contributionId	
+            let contribution_id = response?.payload.data?.createPremium?.contributionId	
             if(url != null){
                 window.open(url, '_blank').focus();
             }
-            if(contribution.policy.uuid){
-                this.props.fetchPremiumValue( [`policyUuid: "${contribution.policy.uuid}" ${contribution_id ? `, contributionUuid: "${contribution_id}` : ""}"`]);
-            }
+            if (contribution.policy.uuid) {
+                const args = `policyUuid: "${contribution.policy.uuid}"${
+                  contribution_id ? `, contributionUuid: "${contribution_id}"` : ""
+                }`;
+              
+                this.props.fetchPremiumValue([args]);
+              }
         } else {
             this.props.updateContribution(
                 this.props.modulesManager,
