@@ -85,7 +85,7 @@ class ContributionForm extends Component {
     }
     if (policy_uuid) {
       fetchPolicySummary(modulesManager, [policy_uuid]);
-      fetchPremiumValue([`policyUuid: "${policy_uuid}" ${contribution_id && `, contributionUuid: ${contribution_id}`}`]);
+      fetchPremiumValue([`policyUuid: "${policy_uuid}" ${contribution_id ? `, contributionUuid: ${contribution_id}` : ""}`]);
       fetchPoliciesPremiums(modulesManager, [`policyUuids: "${policy_uuid}"`]);
       this.setState({
         contribution: {
