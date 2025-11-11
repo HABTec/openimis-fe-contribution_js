@@ -5,6 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import { withTheme, withStyles } from "@material-ui/core/styles";
 import { Grid } from "@material-ui/core";
 import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
 import {
   withHistory,
   withModulesManager,
@@ -181,6 +182,14 @@ class ContributionMasterPanel extends FormPanel {
                   <Grid item xs={3} className={classes.item}>
                     <TextInput
                       module='contribution'
+                      label='contribution.familySummaries.middleName'
+                      readOnly={true}
+                      value={edited.policy.family?.headInsuree?.lastName}
+                    />
+                  </Grid>
+                  <Grid item xs={3} className={classes.item}>
+                    <TextInput
+                      module='contribution'
                       label='contribution.familySummaries.otherNames'
                       readOnly={true}
                       value={edited.policy.family?.headInsuree?.otherNames}
@@ -321,25 +330,90 @@ class ContributionMasterPanel extends FormPanel {
           </Grid>
           <Grid container item xs={12} spacing={2} >
             <Grid item xs={6}>
-              {this.props.premiumValue && <Grid item xs={6} className={classes.item}>
-                <Typography variant="subtitle2" gutterBottom>
-                  {formatMessage(intl, 'contribution', 'contribution.familySize')} : {this.props.premiumValue?.familySize}
-                </Typography>
-                <Typography variant="subtitle2" gutterBottom>
-                  {formatMessage(intl, 'contribution', 'contribution.premiumValue')} : {this.props.premiumValue?.premiumValue}
-                </Typography>
-                <Typography variant="subtitle2" gutterBottom>
-                  {formatMessage(intl, 'contribution', 'contribution.totalAmount')} : {this.props.premiumValue?.totalAmount}
-                </Typography>
-                <Typography variant="subtitle2" gutterBottom>
-                  {formatMessage(intl, 'contribution', 'contribution.additionalMember')} : {this.props.premiumValue?.additionalMembers}
-                </Typography>
-               {this.props.premiumValue?.familyId && <Typography variant="subtitle2" gutterBottom>
-                  {formatMessage(intl, 'contribution', 'contribution.familyId')} : {this.props.premiumValue?.familyId}
-                </Typography>}
-                {this.props.premiumValue?.matchingPaymentId && <Typography variant="subtitle2" gutterBottom>
-                  {formatMessage(intl, 'contribution', 'contribution.paymentId')} : {this.props.premiumValue?.matchingPaymentId}
-                </Typography>}
+              {this.props.premiumValue && <Grid container className={classes.item}>
+                <Grid item xs={6}>
+                  <Typography variant="subtitle2" gutterBottom>
+                    {formatMessage(intl, 'contribution', 'contribution.familySize')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography >
+                    {this.props.premiumValue?.familySize}
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography variant="subtitle2" gutterBottom>
+                    {formatMessage(intl, 'contribution', 'contribution.premiumValue')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography variant="subtitle2" gutterBottom>
+                    {this.props.premiumValue?.premiumValue}
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography variant="subtitle2" gutterBottom>
+                    {formatMessage(intl, 'contribution', 'contribution.additionalMember')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography variant="subtitle2" gutterBottom>
+                    {this.props.premiumValue?.additionalMembers}
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography variant="subtitle2" gutterBottom>
+                    {formatMessage(intl, 'contribution', 'contribution.additionalWifes')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography variant="subtitle2" gutterBottom>
+                    {this.props.premiumValue?.additionalWifes}
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography variant="subtitle2" gutterBottom>
+                    {formatMessage(intl, 'contribution', 'contribution.unpayedYears')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography variant="subtitle2" gutterBottom>
+                    {this.props.premiumValue?.unpayedYears}
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  {this.props.premiumValue?.familyId && <Typography variant="subtitle2" gutterBottom>
+                    {formatMessage(intl, 'contribution', 'contribution.familyId')}
+                  </Typography>}
+                </Grid>
+                <Grid item xs={6}>
+                  {this.props.premiumValue?.familyId && <Typography variant="subtitle2" gutterBottom>
+                    {this.props.premiumValue?.familyId}
+                  </Typography>}
+                </Grid>
+                <Grid item xs={6}>
+                  {this.props.premiumValue?.matchingPaymentId && <Typography variant="subtitle2" gutterBottom>
+                    {formatMessage(intl, 'contribution', 'contribution.paymentId')}
+                  </Typography>}
+                </Grid>
+                <Grid item xs={6}>
+                  {this.props.premiumValue?.matchingPaymentId && <Typography variant="subtitle2" gutterBottom>
+                    {this.props.premiumValue?.matchingPaymentId}
+                  </Typography>}
+                </Grid>
+                <Grid item xs={12}>
+                  <Divider />
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography variant="subtitle2" gutterBottom>
+                    {formatMessage(intl, 'contribution', 'contribution.totalAmount')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography variant="subtitle2" gutterBottom>
+                    {this.props.premiumValue?.totalAmount}
+                  </Typography>
+                </Grid>
               </Grid>
               }
             </Grid>

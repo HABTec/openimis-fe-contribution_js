@@ -41,7 +41,7 @@ export function fetchPoliciesPremiums(mm, filters) {
 }
 
 export function fetchPremiumValue( policy_uuid) {
-  let payload = formatQuery("calculateTotalPremiums", policy_uuid, ["totalAmount", "additionalMembers","familyId","familySize", "premiumValue","matchingPaymentId"]);
+  let payload = formatQuery("calculateTotalPremiums", policy_uuid, ["totalAmount", "additionalMembers","familyId","familySize", "premiumValue","matchingPaymentId", "additionalWifes" ,"unpayedYears" , "additionalSpouseContribution" , "premiumAdult" , "penalityFormula"]);
   return graphql(payload, "CONTRIBUTION_PREMIUM_VALUE");
 }
 
